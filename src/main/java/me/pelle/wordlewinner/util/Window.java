@@ -2,13 +2,10 @@ package me.pelle.wordlewinner.util;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.windows.MOUSEINPUT;
-
-import java.awt.*;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
@@ -33,7 +30,6 @@ public class Window {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         id = glfwCreateWindow(width, height, title, NULL, NULL);
         if (id == NULL) {
@@ -41,6 +37,10 @@ public class Window {
             return;
         }
 
+        glfwSetCursorPosCallback(id, CallBackListener::mousePosCallback);
+        glfwSetMouseButtonCallback(id, CallBackListener::mouseButtonCallback);
+        glfwSetScrollCallback(id, CallBackListener::mouseScrollCallback);
+        glfwSetWindowSizeCallback(id, CallBackListener::sizeCallback);
         glfwMakeContextCurrent(id);
 
         glfwSwapInterval(1);
@@ -48,6 +48,8 @@ public class Window {
 
         GL.createCapabilities();
     }
+
+
 
     public static Window get() {
         return instance;
@@ -77,9 +79,35 @@ public class Window {
     }
 
     private void loop() {
-        glfwPollEvents();
-        glClearColor(1, 1,1, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
+        setup();
+        int mouseX = CallBackListener.getX();
+        int mouseY = CallBackListener.getY();
+        glPolygonMode(GL_FRONT, GL_FILL);
+        glBegin(GL_QUADS);
+        glColor3d(1D, 1D,1D);
+        glVertex2f(mouseX, mouseY);
+        glVertex2f(mouseX + 10, mouseY);
+        glVertex2f(mouseX + 10, mouseY + 10);
+        glVertex2f(mouseX, mouseY + 10);
+        glEnd();
+        end();
+    }
+
+    private void end() {
         glfwSwapBuffers(id);
+        CallBackListener.endFrame();
+    }
+
+    void setup() {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glfwPollEvents();
+        height = CallBackListener.getHeight();
+        width = CallBackListener.getWidth();
+        glViewport(0,0, width, height);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0.0, width, height,0,-1.0,1.0);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
     }
 }
