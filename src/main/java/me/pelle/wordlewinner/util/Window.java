@@ -24,25 +24,26 @@ public class Window {
         FPSAnimator fpsAnimator = new FPSAnimator(window, 60);
         fpsAnimator.start();
 
-        Font font = new Font("SansSerif", Font.PLAIN, 36);
+        Font font = new Font("SansSerif", Font.PLAIN, 100);
         renderer = new TextRenderer(font);
         window.setVisible(true);
         return this;
     }
 
-    public static void onRender(GLDrawable drawable) {
-
+    public static void onRender(GLAutoDrawable drawable) {
+        renderText("hallo", 900, 560, Color.BLACK, false, 60);
     }
 
-    private static void renderText(String text, int x, int y, Color color, boolean shadow) {
-        renderer.beginRendering(1000, 600);
+    private static void renderText(String text, int x, int y, Color color, boolean shadow, double scale) {
+        double factor = 100/scale;
+        renderer.beginRendering((int) (1000 * factor), (int) (600 * factor));
         renderer.setSmoothing(true);
         if (shadow) {
             renderer.setColor(new Color(0, 0, 0, 0.5f));
-            renderer.draw(text, x - 1, 601 - y);
+            renderer.draw(text, (int) ((x - 1) * factor), (int) ((601  - y) * factor));
         }
         renderer.setColor(color);
-        renderer.draw(text, x, 600 - y);
+        renderer.draw(text, (int) (x * factor), (int) ((601  - y) * factor));
         renderer.endRendering();
     }
 }
