@@ -9,6 +9,7 @@ public class WordleWinner {
     Window window;
     ArrayList<String> words = new ArrayList<>();
     public static ArrayList<String> bestWords = new ArrayList<>();
+    public static ArrayList<String> wordsLeft = new ArrayList<>();
     public WordleWinner() {
         try {
             FileInputStream fis = new FileInputStream("words.txt");
@@ -21,6 +22,11 @@ public class WordleWinner {
             e.printStackTrace();
         }
         bestWords.addAll(words);
+        wordsLeft.addAll(words);
         window = new Window().init();
+    }
+
+    class AlgThread extends Thread {
+        ArrayList<String> outCome = new ArrayList<>();
     }
 }
