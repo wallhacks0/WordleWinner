@@ -18,16 +18,15 @@ public class Window {
         GLCapabilities capabilities = new GLCapabilities(profile);
         window = GLWindow.create(capabilities);
         window.setSize(1000, 600);
-        window.setTitle("Drugs");
+        window.setTitle("WordleWinner");
         window.addGLEventListener(new WindowEventListener());
-
+        window.addKeyListener(new InputListener());
         FPSAnimator fpsAnimator = new FPSAnimator(window, 60);
         fpsAnimator.start();
 
         window.setVisible(true);
         return this;
     }
-
 
 
     public static void onRender(GLAutoDrawable drawable) {
@@ -39,10 +38,10 @@ public class Window {
         int i = 1;
         RenderUtil.drawRect(0, 0, 168, 600, new Color(0.15f, 0.15f, 0.15f));
         for (String word : WordleWinner.bestWords) {
-                RenderUtil.drawText(i + ":", 10, 0 + (i*30), Color.WHITE, false, 27);
-            RenderUtil.drawText(word, 55, 0 + (i*30), Color.WHITE, false, 27);
+            RenderUtil.drawText(i + ":", 10, 0 + (i * 30), Color.WHITE, false, 27);
+            RenderUtil.drawText(word, 55, 0 + (i * 30), Color.WHITE, false, 27);
             i++;
-            if (i*30 > 650) break;
+            if (i * 30 > 650) break;
         }
     }
 
@@ -71,11 +70,9 @@ public class Window {
                 }
                 if (wordleLetter.state != WordleLetter.State.BLANK)
                     RenderUtil.drawText(wordleLetter.letter, x + 17, y + 72, Color.WHITE, false, 80);
-                x+=100;
+                x += 100;
             }
-            y+=100;
+            y += 100;
         }
     }
-
-
 }
