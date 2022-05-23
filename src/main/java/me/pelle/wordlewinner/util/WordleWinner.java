@@ -10,6 +10,15 @@ public class WordleWinner {
     ArrayList<String> words = new ArrayList<>();
     public static ArrayList<String> bestWords = new ArrayList<>();
     public static ArrayList<String> wordsLeft = new ArrayList<>();
+    public static InputLine lines[] = new InputLine[] {
+            new InputLine(),
+            new InputLine(),
+            new InputLine(),
+            new InputLine(),
+            new InputLine(),
+            new InputLine()
+    };
+
     public WordleWinner() {
         try {
             FileInputStream fis = new FileInputStream("words.txt");

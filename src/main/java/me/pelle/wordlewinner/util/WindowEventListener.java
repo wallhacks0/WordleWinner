@@ -7,7 +7,6 @@ public class WindowEventListener implements GLEventListener {
 
     @Override
     public void init(GLAutoDrawable drawable) {
-
     }
 
     @Override
@@ -25,7 +24,7 @@ public class WindowEventListener implements GLEventListener {
         gl.glOrtho(0, 1000, 600, 0, 0, 1);
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glClearColor(1, 1, 1, 1);
+        gl.glClearColor(0.15f, 0.15f, 0.15f, 1);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         Window.onRender(drawable);
     }
