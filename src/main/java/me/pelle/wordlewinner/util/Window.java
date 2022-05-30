@@ -1,17 +1,16 @@
 package me.pelle.wordlewinner.util;
 
-
-import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.FPSAnimator;
-import com.jogamp.opengl.util.awt.TextRenderer;
 
 import java.awt.*;
 
 public class Window {
     static GLWindow window;
-
+    private static int mouseX;
+    private static int mouseY;
+    public static boolean click;
     public Window init() {
         GLProfile.initSingleton();
         GLProfile profile = GLProfile.getDefault();
@@ -20,6 +19,7 @@ public class Window {
         window.setSize(1000, 600);
         window.setTitle("WordleWinner");
         window.addGLEventListener(new WindowEventListener());
+        window.addMouseListener(new MouseEventListener());
         window.addKeyListener(new InputListener());
         FPSAnimator fpsAnimator = new FPSAnimator(window, 60);
         fpsAnimator.start();
@@ -28,10 +28,16 @@ public class Window {
         return this;
     }
 
+    public static void updateMouse(int x, int y) {
+        mouseX = x;
+        mouseY = y;
+    }
+
 
     public static void onRender(GLAutoDrawable drawable) {
         drawBestWords();
         drawLines();
+        click = false;
     }
 
     private static void drawBestWords() {
@@ -68,8 +74,25 @@ public class Window {
                 if (wordleLetter.state == WordleLetter.State.BLANK || wordleLetter.state == WordleLetter.State.TYPED) {
                     RenderUtil.drawRect(x + 2, y + 2, x + 90, y + 90, new Color(0.15f, 0.15f, 0.15f));
                 }
-                if (wordleLetter.state != WordleLetter.State.BLANK)
+                if (wordleLetter.state != WordleLetter.State.BLANK) {
                     RenderUtil.drawText(wordleLetter.letter, x + 17, y + 72, Color.WHITE, false, 80);
+                    if (click && WordleWinner.activeLine == line) {
+                        if (mouseX > x && mouseX < x + 92 && mouseY > y && mouseY < y + 92) {
+                            switch (wordleLetter.state) {
+                                case TYPED:
+                                case GREEN:
+                                    wordleLetter.state = WordleLetter.State.GREY;
+                                    break;
+                                case GREY:
+                                    wordleLetter.state = WordleLetter.State.YELLOW;
+                                    break;
+                                case YELLOW:
+                                    wordleLetter.state = WordleLetter.State.GREEN;
+                                    break;
+                            }
+                        }
+                    }
+                }
                 x += 100;
             }
             y += 100;

@@ -9,8 +9,6 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class WordleWinner {
-    Window window;
-    ArrayList<String> words = new ArrayList<>();
     public static ArrayList<String> bestWords = new ArrayList<>();
     public static ArrayList<String> wordsLeft = new ArrayList<>();
     public static InputLine activeLine;
@@ -23,6 +21,8 @@ public class WordleWinner {
             new InputLine(4),
             new InputLine(5)
     };
+    static ArrayList<String> words = new ArrayList<>();
+    Window window;
 
     public WordleWinner() {
         try {
@@ -36,7 +36,6 @@ public class WordleWinner {
             e.printStackTrace();
         }
         bestWords.addAll(words);
-        wordsLeft.addAll(words);
         window = new Window().init();
         activeLine = lines[0];
         activeLetter = activeLine.letters[0];
@@ -59,8 +58,16 @@ public class WordleWinner {
             activeLetter.state = WordleLetter.State.BLANK;
         } else if (activeLetter == null) {
             if (e.getKeyCode() == 13) {
-                activeLine = lines[activeLine.index + 1];
-                activeLetter = activeLine.letters[0];
+                boolean flag = false;
+                for (WordleLetter l : activeLine.letters) {
+                    if (l.state == WordleLetter.State.TYPED || l.state == WordleLetter.State.BLANK) flag = true;
+                }
+                if (!flag) {
+                    activeLine.done = true;
+                    activeLine = lines[activeLine.index + 1];
+                    activeLetter = activeLine.letters[0];
+                    new AlgThread().start();
+                }
             }
         } else if (Character.isAlphabetic(e.getKeyChar())) {
             activeLetter.letter = String.valueOf(e.getKeyChar()).toUpperCase(Locale.ROOT);
@@ -77,7 +84,30 @@ public class WordleWinner {
         }
     }
 
-    class AlgThread extends Thread {
+    public static int countChar(String word, char search) {
+        int count = 0;
+        for (int i = 0; i < word.length(); i++) {
+            if (word.charAt(i) == search) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    static class AlgThread extends Thread {
         ArrayList<String> outCome = new ArrayList<>();
+
+        @Override
+        public void run() {
+            Pattern pattern = new Pattern();
+            for (InputLine inputLine : lines) {
+                if (!inputLine.done) break;
+                pattern.add(inputLine);
+            }
+            for (String word : words) {
+               if (pattern.match(word)) wordsLeft.add(word);
+            }
+            wordsLeft.forEach(System.out::println);
+        }
     }
 }

@@ -21,7 +21,7 @@ public class WindowEventListener implements GLEventListener {
         RenderUtil.gl = gl;
         gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glLoadIdentity();
-        gl.glOrtho(0, 1000, 600, 0, 0, 1);
+        gl.glOrtho(0, Window.window.getWidth(), Window.window.getHeight(), 0, 0, 1);
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glClearColor(0.15f, 0.15f, 0.15f, 1);
