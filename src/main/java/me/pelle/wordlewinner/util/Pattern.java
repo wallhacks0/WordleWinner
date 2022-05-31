@@ -6,9 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static me.pelle.wordlewinner.util.WordleWinner.countChar;
 
-public class Pattern implements Cloneable {
+public class Pattern  {
     ArrayList<String> grey = new ArrayList<>();
-    int test = 0;
     ConcurrentHashMap<String, Integer> yellow = new ConcurrentHashMap<>();
     PatternLetter letters[] = new PatternLetter[]{
             new PatternLetter(0),
@@ -18,8 +17,17 @@ public class Pattern implements Cloneable {
             new PatternLetter(4)
     };
 
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Pattern clone() {
+        Pattern pattern = new Pattern();
+        pattern.grey.addAll(grey);
+        for (String s : yellow.keySet()) {
+            pattern.yellow.put(s, yellow.get(s));
+        }
+        for (PatternLetter l : pattern.letters) {
+            l.green = letters[l.index].green;
+            l.yellow.addAll(letters[l.index].yellow);
+        }
+        return pattern;
     }
 
     public boolean match(String word) {
@@ -95,7 +103,14 @@ public class Pattern implements Cloneable {
 
         for (WordleLetter l : inputLine.letters) {
             if (l.state == WordleLetter.State.GREY && !ignore.contains(l.letter)) {
-                if (!yellow.containsKey(l.letter))
+                boolean flag = false;
+                for (WordleLetter lx : inputLine.letters) {
+                    if (lx.letter.equals(l.letter) && (lx.state == WordleLetter.State.GREEN || lx.state == WordleLetter.State.YELLOW)) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
                     grey.add(l.letter.toLowerCase(Locale.ROOT));
             }
         }

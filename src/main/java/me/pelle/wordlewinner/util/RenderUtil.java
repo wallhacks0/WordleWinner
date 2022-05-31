@@ -26,14 +26,14 @@ public class RenderUtil {
 
     public static void drawText(String text, int x, int y, Color color, boolean shadow, double scale) {
         double factor = 100/scale;
-        renderer.beginRendering((int) (1000 * factor), (int) (600 * factor));
+        renderer.beginRendering((int) (Window.window.getWidth() * factor), (int) (630 * factor));
         renderer.setSmoothing(true);
         if (shadow) {
             renderer.setColor(new Color(0, 0, 0, 0.5f));
-            renderer.draw(text, (int) ((x - 1) * factor), (int) ((601  - y) * factor));
+            renderer.draw(text, (int) ((x - 1) * factor), (int) ((631  - y) * factor));
         }
         renderer.setColor(color);
-        renderer.draw(text, (int) (x * factor), (int) ((601  - y) * factor));
+        renderer.draw(text, (int) (x * factor), (int) ((631  - y) * factor));
         renderer.endRendering();
     }
 }

@@ -16,7 +16,7 @@ public class WindowEventListener implements GLEventListener {
 
     @Override
     public void display(GLAutoDrawable drawable) {
-        Window.window.setSize(1000, 600);
+        Window.window.setSize(920, 630);
         GL2 gl = drawable.getGL().getGL2();
         RenderUtil.gl = gl;
         gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);

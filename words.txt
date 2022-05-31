@@ -45,6 +45,7 @@ adore
 adorn
 adult
 adzes
+manor
 aegis
 aeons
 aerie
@@ -204,6 +205,7 @@ atman
 atoll
 atoms
 atone
+tonic
 atopy
 attic
 audio
@@ -215,6 +217,7 @@ aunts
 aunty
 aural
 auras
+kitty
 autos
 auxin
 avail
@@ -922,6 +925,7 @@ costs
 cotta
 couch
 cough
+otter
 could
 count
 coupe
@@ -2111,6 +2115,7 @@ scope
 score
 scout
 scrap
+scrip
 screw
 seals
 seams
@@ -2247,6 +2252,7 @@ steps
 stick
 stiff
 still
+tepee
 stock
 stole
 stone
@@ -2318,6 +2324,7 @@ thing
 think
 third
 those
+thorn
 three
 threw
 throw
