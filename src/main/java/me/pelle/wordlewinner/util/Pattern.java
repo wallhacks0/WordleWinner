@@ -36,6 +36,16 @@ public class Pattern  {
                 return false;
             }
         }
+        for (PatternLetter letter : letters) {
+            if (letter.green != null) {
+                if (!letter.green.equals(String.valueOf(word.charAt(letter.index)))) return false;
+            }
+            for (String yellow : letter.yellow) {
+                if (yellow.equals(String.valueOf(word.charAt(letter.index)))) {
+                    return false;
+                }
+            }
+        }
         for (String yellow : yellow.keySet()) {
             int amount = this.yellow.get(yellow);
             if (amount > 0) {
@@ -44,17 +54,6 @@ public class Pattern  {
                 }
             } else {
                 if (countChar(word, yellow.charAt(0)) != -1 * amount) {
-                    return false;
-                }
-            }
-        }
-
-        for (PatternLetter letter : letters) {
-            if (letter.green != null) {
-                if (!letter.green.equals(String.valueOf(word.charAt(letter.index)))) return false;
-            }
-            for (String yellow : letter.yellow) {
-                if (yellow.equals(String.valueOf(word.charAt(letter.index)))) {
                     return false;
                 }
             }

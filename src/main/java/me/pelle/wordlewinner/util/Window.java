@@ -36,7 +36,7 @@ public class Window {
         if (done)
             RenderUtil.drawText("Done!", 10, 622, Color.WHITE, false, 18);
         else
-            RenderUtil.drawText("Computing.. " + (int) (WordleWinner.algThread.progress*100) + "%",  10, 622, Color.WHITE, false, 18);
+            RenderUtil.drawText("Computing.. " + (int) (WordleWinner.algThread.progress*100) + "%   " + WordleWinner.algThread.timeLeft(),  10, 622, Color.WHITE, false, 18);
     }
 
     private static void drawBestWords() {

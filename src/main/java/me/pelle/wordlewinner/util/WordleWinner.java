@@ -16,9 +16,10 @@ public class WordleWinner {
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static AlgThread algThread;
-    public static ArrayList<String> bestWords = new ArrayList<>();
+    public static CopyOnWriteArrayList<String> bestWords = new CopyOnWriteArrayList<>();
+    public static ArrayList<String> wordsGuess = new ArrayList<>();
     public static CopyOnWriteArrayList<String> wordsLeft = new CopyOnWriteArrayList<>();
-    public static ArrayList<String> wordsLeftForRender = new ArrayList<>();
+    public static CopyOnWriteArrayList<String> wordsLeftForRender = new CopyOnWriteArrayList<>();
     public static InputLine activeLine;
     public static WordleLetter activeLetter;
     public static InputLine lines[] = new InputLine[]{
@@ -43,7 +44,18 @@ public class WordleWinner {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        bestWords.addAll(words);
+
+        try {
+            FileInputStream fis = new FileInputStream("words2.txt");
+            Scanner sc = new Scanner(fis);
+
+            while (sc.hasNextLine()) {
+                wordsGuess.add(sc.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        bestWords.addAll(wordsGuess);
         wordsLeftForRender.addAll(words);
         window = new Window().init();
         activeLine = lines[0];
@@ -71,6 +83,13 @@ public class WordleWinner {
                 activeLetter = activeLine.letters[1];
             } else if (activeLetter == activeLine.letters[1]) {
                 activeLetter = activeLine.letters[0];
+            } else if (activeLetter.index == 0) {
+                if (activeLine.index != 0) {
+                    activeLine = lines[activeLine.index-1];
+                    activeLetter = activeLine.letters[4];
+                    activeLine.done = false;
+                    updateAlgThread();
+                }
             }
             activeLetter.letter = "";
             activeLetter.state = WordleLetter.State.BLANK;
@@ -172,9 +191,26 @@ public class WordleWinner {
 
     static class AlgThread extends Thread {
         double progress = 0;
+        long startTime;
+
+        public String timeLeft() {
+            String s = "Time Left: ";
+            long delta = System.currentTimeMillis() - startTime;
+            double factor = 1 / progress;
+            double timeLeft = (factor * delta) - delta;
+            timeLeft *= 0.00001666666;
+            double extra = timeLeft % 1;
+            timeLeft -= extra;
+            timeLeft = (int) timeLeft;
+            int seconds = (int) (extra * 60);
+            String minutes = String.valueOf(timeLeft);
+            minutes = minutes.substring(0, minutes.length() - 2) + ":";
+            return s + (minutes.equals("0:") ? "" : minutes) + seconds;
+        }
 
         @Override
         public void run() {
+            startTime = System.currentTimeMillis();
             Pattern pattern = new Pattern();
             for (InputLine inputLine : lines) {
                 if (!inputLine.done) break;
@@ -187,8 +223,8 @@ public class WordleWinner {
             wordsLeftForRender.clear();
             wordsLeftForRender.addAll(wordsLeft);
             ArrayList<GuessThread> threads = new ArrayList<>();
-            ExecutorService executor = Executors.newFixedThreadPool(5);
-            for (String word : words) {
+            ExecutorService executor = Executors.newFixedThreadPool(6);
+            for (String word : wordsGuess) {
                 GuessThread t = new GuessThread(word, pattern);
                 executor.execute(t);
                 threads.add(t);
